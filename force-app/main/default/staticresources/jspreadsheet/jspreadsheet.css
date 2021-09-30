@@ -76,6 +76,10 @@
     border-bottom: 1px solid #ccc;
 }
 
+table.jexcel {
+    width: 100%;
+}
+
 .jexcel > thead > tr > td
 {
     border-top: 1px solid #ccc;

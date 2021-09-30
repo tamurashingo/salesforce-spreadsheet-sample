@@ -5886,6 +5886,8 @@ var formula = (function() {
 
 if (! jSuites && typeof(require) === 'function') {
     var jSuites = require('jsuites');
+} else {
+  jSuites = window.jSuites;
 }
 
 ;(function (global, factory) {
