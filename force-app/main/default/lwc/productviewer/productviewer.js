@@ -1,8 +1,11 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import SpreadsheetFiles from '@salesforce/resourceUrl/jspreadsheet';
 import JsuitesFlies from '@salesforce/resourceUrl/jsuites';
+
+import getListView from '@salesforce/apex/ProductViewer.getListView';
+import getProducts from '@salesforce/apex/ProductViewer.getProducts';
 
 export default class Productviewer extends LightningElement {
 
@@ -11,14 +14,80 @@ export default class Productviewer extends LightningElement {
    */
   initialized = false;
 
+  /**
+   * jspreadsheet obj
+   * initializeUIで設定する
+   */
+  spreadsheet = null;
 
   /**
-   * @type {Array} data サンプルデータ
+   * 読込中のクルクル表示用
+   * @type {boolean} loading
    */
-  data = [
-    ['Jazz', 'Honda', '2019-02-12', '', true, '$ 2.000,00', '#777700'],
-    ['Civic', 'Honda', '2018-07-11', '', true, '$ 4.000,01', '#007777'],
-  ];
+  @track
+  loading = false;
+
+
+  /**
+   * @type {{label:string, value:string}[]} - 商品情報のリストビューで使用する選択肢
+   */
+  @track
+  productListView = [];
+
+  @wire(getListView)
+  wiredProductListView({error, data}) {
+    console.log('wired');
+    console.log(data);
+    console.log(error);
+    if (data) {
+      console.log('update4');
+      console.log(data);
+      this.productListView = data.map(rec => {
+        return {
+          label: rec.label,
+          value: rec.id
+        };
+      });
+    } else if (error) {
+      console.log('dated');
+      console.log(error);
+    }
+  }
+  
+  /**
+   * 
+   * @param {Object[]} data - Apexからの戻り値
+   * @param {String} data[].Id - 商品レコードのId
+   * @param {String} data[].Name - 商品名
+   * @param {String} data[].ProductCode - 商品コード
+   * @param {String} data[].StockKeepingUnit - SKU
+   * @return {Array<Array<String>>}
+   */
+  unwrap(data) {
+    return data.map(p => {
+      return [
+        p.Id,
+        p.Name,
+        p.ProductCode,
+        p.StockKeepingUnit
+      ];
+    });
+  }
+
+  handleListview(event) {
+    this.loading = true;
+    const filterId = event.detail.value;
+    getProducts({filterId: filterId})
+      .then(result => {
+        this.spreadsheet.setData(this.unwrap(result));
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(onFinally => {
+        this.loading = false;
+      });
+  }
 
   renderedCallback() {
     if (this.initialized) {
@@ -49,18 +118,15 @@ export default class Productviewer extends LightningElement {
    * UIの構築
    */
   initializeUI() {
-    const ss = this.template.querySelector('div');
+    const ss = this.template.querySelector('.here');
 
-    jspreadsheet(ss, {
-      data: this.data,
+    this.spreadsheet = jspreadsheet(ss, {
+      data: [],
       columns: [
-        { type: 'text', title: 'Car', width: 120 },
-        { type: 'dropdown', title:'Make', width:200, source:[ "Alfa Romeo", "Audi", "Bmw" ] },
-        { type: 'calendar', title:'Available', width:200 },
-        { type: 'image', title:'Photo', width:120 },
-        { type: 'checkbox', title:'Stock', width:80 },
-        { type: 'numeric', title:'Price', width:100, mask:'$ #.##,00', decimal:',' },
-        { type: 'color', width:100, render:'square', },
+        { type: 'text', title: 'Id', width: 120 },
+        { type: 'text', title: '商品名', width: 120},
+        { type: 'text', title: '商品コード', width: 120},
+        { type: 'text', title: 'SKU', width: 120},
       ]
     });
   }

@@ -1,3 +1,17 @@
 <template>
-  <div></div>
+  <div class="c-container">
+    <div class="spinner">
+      <template if:true={loading}>
+        <lightning-spinner alternative-text="loading" variant="brand" size="large"></lightning-spinner>
+      </template>
+    </div>
+    <lightning-combobox
+       name="products"
+       label="商品情報"
+       placeholder="Select Listview"
+       options={productListView}
+       onchange={handleListview}
+    ></lightning-combobox>
+    <div class="here"></div>
+  </div>
 </template>

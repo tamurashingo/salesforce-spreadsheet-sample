@@ -1,18 +1,21 @@
-# Salesforce DX Project: Next Steps
+# Salesforceでスプレッドシートっぽい表示をするサンプル
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+## 使用ライブラリ
 
-## How Do You Plan to Deploy Your Changes?
+- Jspreadsheet CE v4
+  - https://github.com/jspreadsheet/ce
+- jSuites v4
+  - https://github.com/jspreadsheet/ce
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
 
-## Configure Your Salesforce DX Project
+## スクリーンショット
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+<img src="img/screenshot.png">
 
-## Read All About It
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+## 解説
+
+- https://salesforce-dev-notes.com/posts/2021/08/29/3rd-party-library/
+- https://salesforce-dev-notes.com/posts/2021/08/29/3rd-party-library-part2/
+- https://salesforce-dev-notes.com/posts/2021/09/12/apex-listview/
+
